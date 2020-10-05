@@ -38,8 +38,27 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
     // hjelpemetode
     private Node<T> finnNode(int indeks)
+
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+int i = 0;
+Node<T> returnNode = null;
+
+
+        if (indeks<antall/2){ // hvis indeksen er mindre enn antall/2, skal denne koden kjøres
+returnNode = hode;
+
+        for (i=0;i<indeks;i++){ // benytter en for loop, starter fra hode, og går videre derfra
+            returnNode = returnNode.neste;
+        }
+    }
+
+        if (indeks>=antall/2){
+returnNode=hale;
+            for(i=0;i>indeks;i--){ // starter på hale og går bakover
+                returnNode = returnNode.forrige;
+            }
+        }
+        return returnNode;
     }
 
     // konstruktør
@@ -57,10 +76,43 @@ public class DobbeltLenketListe<T> implements Liste<T>
     }
 
     // subliste
-    public Liste<T> subliste(int fra, int til)
-    {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+    public Liste<T> subliste(int fra, int til) {
+
+        //startet fra node x(finnnode)
+        Node<T> x = finnNode(fra);
+
+        fratilKontroll(antall, fra, til);
+
+        DobbeltLenketListe<T> subliste = new DobbeltLenketListe<>();
+
+
+        //bruker  en løkke til å legge til alle nodene mellom fra og til
+        for (int i=fra;i<til;i++){
+
+
+subliste = (DobbeltLenketListe<T>) x.verdi; // legger alt fra-til intervallet i sublisten
+x = x.neste; // starter fra og slutter ved Til som er spesifisert i for loop
+
+        }
+
+        //retunerer sublisten
+        return subliste;
+
+
     }
+        private void fratilKontroll ( int antall, int fra, int til){
+            if (fra < 0)                                  // fra er negativ
+                throw new IndexOutOfBoundsException
+                        ("fra(" + fra + ") er negativ!");
+
+            if (til > antall)                          // til er utenfor tabellen
+                throw new IndexOutOfBoundsException
+                        ("til(" + til + ") > tablengde(" + antall + ")");
+
+            if (fra > til)                                // fra er større enn til
+                throw new IndexOutOfBoundsException
+                        ("fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
+        }
 
     @Override
     public int antall()
@@ -77,7 +129,8 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public boolean leggInn(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        //throw new UnsupportedOperationException("Ikke laget ennå!");
+        return true;
     }
 
     @Override
@@ -89,48 +142,88 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public boolean inneholder(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        Node <T> x = hode;
+boolean sjekk = false;
+
+
+
+
+
+        if (hode != null || verdi !=null){
+if (x.verdi.equals(verdi)){
+    sjekk = true;
+}
+if (hode == null || verdi == null)
+{
+    return false;
+}
+
+
+        }
+return sjekk;
     }
 
     @Override
     public T hent(int indeks)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        indeksKontroll(indeks,false);
+        Node<T> nodeRetur = finnNode(indeks);
+        return nodeRetur.verdi;
     }
 
     @Override
-    public int indeksTil(T verdi)
-    {
+    public int indeksTil(T verdi) {
         int i = 0; // hjelpevariabel som sjekker indeks.
-        Node <T> r = hode;
-        boolean finnes = false;
-
-        if(verdi != null) {
+        Node<T> r = hode;
+        boolean ikfinnes = true;
 
 
-        while (r != null){
+        if (verdi != null) {
 
-            if (r.verdi.equals(verdi)){
-                finnes = true;
-                break; // siden verdien ble funnet, så hopper man ut av loopen man er i
+
+            while (r != null) {
+
+                if (r.verdi.equals(verdi)) {
+                    ikfinnes = false;
+                    break; // siden verdien ble funnet, så hopper man ut av loopen man er i
+                }
+                else {
+                    // som følge av at man hoppet ut av loopen når man fant verdien gjør man et par justeringer
+                    r = r.neste; // pek mot  neste
+                    i++; // øk til index
+                }
             }
-            // som følge av at man hoppet ut av loopen når man fant verdien gjør man et par justeringer
-            r = r.neste; // pek mot  neste
-            i++; // øk til index
 
         }
 
-    }
-        if (!finnes || verdi == null){
-            return -1;
+
+
+else {
+    i=-1;
         }
-        return i;
+        if (ikfinnes){
+            i=-1;
+        }
+        return i; //enten blir indeksen retunert eller -1
     }
 
     @Override
     public T oppdater(int indeks, T nyverdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        Node<T> x = null;
+
+        indeksKontroll(indeks,false);
+
+x = finnNode(indeks); // lagrer indeksen
+
+  T tidligereVerdi =  x.verdi;
+
+  if (nyverdi != null){
+      x.verdi = nyverdi;
+endringer++;
+  }
+
+return tidligereVerdi;
     }
 
     @Override
